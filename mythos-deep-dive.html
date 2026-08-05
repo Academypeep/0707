@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Mythos Preview — The AI Too Powerful to Release</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0a0c12;
+    --surface: #10131c;
+    --border: #1e2235;
+    --accent: #4f8ef7;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --card: #131620;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  /* ── HERO ─────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 20%, rgba(79,142,247,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 80%, rgba(124,58,237,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    border: 1px solid rgba(79,142,247,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    display: inline-block;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.05;
+    max-width: 900px;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 620px;
+    margin-bottom: 48px;
+    font-weight: 400;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 42px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── LAYOUT ───────────────────────────── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  section { padding: 80px 0; }
+
+  .section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  h2 {
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+  }
+
+  .lead {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 680px;
+    margin-bottom: 48px;
+    line-height: 1.7;
+  }
+
+  /* ── DIVIDER ──────────────────────────── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── WHAT IS IT ───────────────────────── */
+  .explainer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .exp-cell {
+    background: var(--card);
+    padding: 36px 32px;
+  }
+
+  .exp-cell .icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .exp-cell h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .exp-cell p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── TIMELINE ─────────────────────────── */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+  }
+
+  .t-item {
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .t-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 3px rgba(79,142,247,0.2);
+  }
+
+  .t-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .t-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .t-body {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── CAPABILITY CARDS ─────────────────── */
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .cap-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px;
+    transition: border-color 0.2s;
+  }
+
+  .cap-card:hover { border-color: var(--accent); }
+
+  .cap-badge {
+    display: inline-block;
+    background: rgba(79,142,247,0.1);
+    color: var(--accent);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+
+  .cap-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .cap-card p { color: var(--muted); font-size: 13px; line-height: 1.65; }
+
+  .cap-metric {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent3);
+  }
+
+  .cap-metric-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── WHAT CAN / CANNOT ────────────────── */
+  .can-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .can-box {
+    border-radius: 14px;
+    padding: 32px;
+    border: 1px solid;
+  }
+
+  .can-box.yes {
+    background: rgba(16,185,129,0.05);
+    border-color: rgba(16,185,129,0.2);
+  }
+
+  .can-box.no {
+    background: rgba(239,68,68,0.04);
+    border-color: rgba(239,68,68,0.15);
+  }
+
+  .can-box h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .can-box.yes h3 { color: var(--accent3); }
+  .can-box.no h3 { color: #ef4444; }
+
+  .can-list { list-style: none; }
+
+  .can-list li {
+    font-size: 14px;
+    color: var(--muted);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .can-list li:last-child { border-bottom: none; }
+
+  .can-list li .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .yes .dot { background: var(--accent3); }
+  .no .dot { background: #ef4444; }
+
+  /* ── PARTNERS ─────────────────────────── */
+  .partners-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .partner-tag {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ── BIG NUMBER CALLOUT ───────────────── */
+  .callout-bar {
+    background: linear-gradient(135deg, rgba(79,142,247,0.08), rgba(124,58,237,0.08));
+    border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 16px;
+    padding: 48px 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    text-align: center;
+  }
+
+  .cnum { font-size: 38px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+  .clabel { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; margin-top: 6px; }
+
+  /* ── BUGS FOUND ───────────────────────── */
+  .bug-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .bug-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .bug-age {
+    background: rgba(245,158,11,0.1);
+    color: var(--warn);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .bug-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .bug-desc strong { color: var(--text); font-weight: 500; }
+
+  /* ── WHY RESTRICTED ───────────────────── */
+  .reason-steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .reason-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    position: relative;
+  }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    color: rgba(79,142,247,0.08);
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    line-height: 1;
+  }
+
+  .reason-step h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .reason-step p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+  /* ── WHAT COULD HAVE BEEN ─────────────── */
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .scenario {
+    border-radius: 14px;
+    padding: 28px;
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+
+  .scenario .s-head {
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .scenario h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+  .scenario p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+  /* ── WHAT YOU CAN USE ─────────────────── */
+  .use-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .use-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .use-card .u-tag {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .use-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .use-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ── FOOTER ───────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 0;
+    text-align: center;
+  }
+
+  .footer p { color: var(--muted); font-size: 13px; }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  /* ── RESPONSIVE ───────────────────────── */
+  @media (max-width: 768px) {
+    .explainer-grid,
+    .cap-grid,
+    .can-grid,
+    .callout-bar,
+    .bug-list,
+    .reason-steps,
+    .scenario-grid,
+    .use-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero-stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section class="hero">
+  <span class="eyebrow">Anthropic · April 2026</span>
+  <h1>The AI Model<br><span class="highlight">Too Powerful to Release</span></h1>
+  <p class="hero-sub">
+    Claude Mythos Preview: a frontier AI so capable at finding and exploiting security vulnerabilities,
+    Anthropic chose to withhold it from the public entirely.
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">10,000+</div>
+      <div class="stat-label">Zero-day vulnerabilities found</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">150+</div>
+      <div class="stat-label">Vetted partner organizations</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">15+</div>
+      <div class="stat-label">Countries covered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">27yrs</div>
+      <div class="stat-label">Oldest bug found</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     WHAT IS IT
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// What is it</span>
+    <h2>A Model Class That Changed the Calculus</h2>
+    <p class="lead">
+      Claude Mythos Preview is Anthropic's most advanced AI model. It was not built specifically for cybersecurity —
+      its security capabilities emerged as a byproduct of general improvements in code, reasoning, and autonomous task execution.
+    </p>
+
+    <div class="explainer-grid">
+      <div class="exp-cell">
+        <span class="icon">🧠</span>
+        <h3>General Intelligence, Security Superpower</h3>
+        <p>Mythos was trained as a general-purpose model. Its ability to find and exploit vulnerabilities
+        was never the target — it emerged from better reasoning and coding ability. That's what surprised even Anthropic.</p>
+      </div>
+      <div class="exp-cell">
+        <span class="icon">🔒</span>
+        <h3>Why It's Not Available to You</h3>
+        <p>If released publicly, it could enable almost anyone — at very low cost — to find and exploit unknown security
+        flaws in operating systems, browsers, and critical software. That risk was deemed too high.</p>
+      </div>
+      <div class="exp-cell">
+        <span class="icon">🌐</span>
+        <h3>What Project Glasswing Is</h3>
+        <p>Named after the glasswing butterfly (transparent wings, hiding in plain sight), it's a controlled
+        cybersecurity coalition where vetted organizations use Mythos Preview exclusively for defensive purposes.</p>
+      </div>
+      <div class="exp-cell">
+        <span class="icon">⚡</span>
+        <h3>The Speed Shift</h3>
+        <p>Security work that once took expert human teams weeks or months can now be done by Mythos
+        in hours, for tens to hundreds of dollars in compute. That speed asymmetry changes everything.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     TIMELINE
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// Timeline</span>
+    <h2>How It Unfolded</h2>
+    <p class="lead">From internal testing to a 150-organization global coalition in under 90 days.</p>
+
+    <div class="timeline">
+      <div class="t-item">
+        <div class="t-date">EARLY 2026 — PRE-RELEASE</div>
+        <div class="t-title">Anthropic's Internal Testing Reveals Striking Capabilities</div>
+        <div class="t-body">During standard pre-release evaluation, Mythos Preview demonstrates the ability to
+        autonomously identify and exploit zero-day vulnerabilities in every major OS and web browser.
+        Anthropic decides it cannot release this model through normal channels.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">APRIL 7–8, 2026</div>
+        <div class="t-title">Project Glasswing Launches with 12 Founding Partners</div>
+        <div class="t-body">AWS, Apple, Google, Microsoft, Cisco, CrowdStrike, NVIDIA, JPMorganChase,
+        Palo Alto Networks, Broadcom, the Linux Foundation, and Anthropic join as launch partners.
+        40+ additional organizations receive access simultaneously.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">APRIL–MAY 2026</div>
+        <div class="t-title">First Results: 10,000+ High-Severity Flaws Found</div>
+        <div class="t-body">Partners using Mythos Preview in their codebases surface more than 10,000 high
+        or critical-severity vulnerabilities. Cloudflare alone reports thousands of bugs with a false-positive
+        rate better than human testers.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">MAY 2026</div>
+        <div class="t-title">Claude Security Launches in Public Beta</div>
+        <div class="t-body">Anthropic releases Claude Security (powered by Claude Opus 4.7, not Mythos)
+        as a public tool for Enterprise customers to scan their own codebases. In three weeks, it patches
+        over 2,100 vulnerabilities.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">JUNE 2026 — PRESENT</div>
+        <div class="t-title">Expansion to 150+ Organizations Across 15+ Countries</div>
+        <div class="t-body">Project Glasswing expands further, with each new organization required to meet
+        strict security requirements before gaining access. Cloud Software Group becomes one of the newest
+        additions, focused on national security and healthcare environments.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     WHAT IT FOUND
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// Known Discoveries</span>
+    <h2>Real Bugs It Found — That Survived Decades of Human Review</h2>
+    <p class="lead">The 1% of vulnerabilities Anthropic was able to disclose (because patches already shipped)
+    tell the whole story.</p>
+
+    <div class="bug-list">
+      <div class="bug-item">
+        <span class="bug-age">27 YRS OLD</span>
+        <div class="bug-desc"><strong>OpenBSD TCP SACK bug</strong> — Denial-of-service vulnerability hidden
+        in an OS famous for its security focus, surviving millions of automated tests.</div>
+      </div>
+      <div class="bug-item">
+        <span class="bug-age">17 YRS OLD</span>
+        <div class="bug-desc"><strong>FreeBSD NFS Server RCE</strong> — Remote code execution granting
+        full root access to unauthenticated users over the network.</div>
+      </div>
+      <div class="bug-item">
+        <span class="bug-age">16 YRS OLD</span>
+        <div class="bug-desc"><strong>FFmpeg H.264 Out-of-Bounds Write</strong> — A flaw in the most
+        widely used video codec library on the planet, in code reviewed countless times.</div>
+      </div>
+      <div class="bug-item">
+        <span class="bug-age">RECENT</span>
+        <div class="bug-desc"><strong>Browser JIT Heap Spray + Sandbox Escape</strong> — Exploits
+        chaining JIT compiler weaknesses that escape both the renderer and the OS-level sandbox.</div>
+      </div>
+      <div class="bug-item">
+        <span class="bug-age">RECENT</span>
+        <div class="bug-desc"><strong>VMM Guest-to-Host Memory Corruption</strong> — A bug in a
+        production memory-safe virtual machine monitor, the kind of system designed to be hardest to break.</div>
+      </div>
+      <div class="bug-item">
+        <span class="bug-age">RECENT</span>
+        <div class="bug-desc"><strong>Firmware Vulnerabilities</strong> — Multiple smartphone firmware
+        flaws enabling root-level access, found through closed-source reverse engineering with no source access.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     NUMBERS
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="callout-bar">
+      <div>
+        <div class="cnum">23,019</div>
+        <div class="clabel">Candidate vulnerabilities across 1,000+ open-source projects</div>
+      </div>
+      <div>
+        <div class="cnum">1,726</div>
+        <div class="clabel">Confirmed valid findings after external security firm triage</div>
+      </div>
+      <div>
+        <div class="cnum">90.8%</div>
+        <div class="clabel">True positive rate — better than human security testers</div>
+      </div>
+      <div>
+        <div class="cnum">~$100</div>
+        <div class="clabel">Compute cost to do work that once took a team weeks</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     CAPABILITIES
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// Technical Capabilities</span>
+    <h2>What Mythos Preview Can Actually Do</h2>
+    <p class="lead">Six documented capability areas that define what makes this model different from every AI that came before it.</p>
+
+    <div class="cap-grid">
+      <div class="cap-card">
+        <span class="cap-badge">CAPABILITY 01</span>
+        <h3>Source-Visible Zero-Day Discovery</h3>
+        <p>Given access to source code, Mythos autonomously reads the codebase, hypothesizes vulnerabilities,
+        runs the software to test its theories, adds debug logic, and outputs confirmed findings — with no human guidance.</p>
+        <div class="cap-metric">595</div>
+        <div class="cap-metric-label">Tier-1 & 2 crashes found vs. ~175 by the prior best model</div>
+      </div>
+      <div class="cap-card">
+        <span class="cap-badge">CAPABILITY 02</span>
+        <h3>Closed-Source Reverse Engineering</h3>
+        <p>Mythos can reverse-engineer stripped binaries (compiled software with no source code)
+        and find exploitable flaws. It did this on browsers and operating systems where no source access exists.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-badge">CAPABILITY 03</span>
+        <h3>Exploit Construction</h3>
+        <p>Finding a vulnerability is one thing. Mythos writes working exploits — including sophisticated
+        JIT heap sprays and ROP chains — that demonstrate the vulnerability is actually exploitable,
+        not just theoretical.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-badge">CAPABILITY 04</span>
+        <h3>N-Day Weaponization</h3>
+        <p>For known but unpatched vulnerabilities (N-days), Mythos can rapidly turn public vulnerability
+        information into a working exploit — drastically shrinking the window organizations have to patch.</p>
+      </div>
+      <div class="cap-card">
+        <span class="cap-badge">CAPABILITY 05</span>
+        <h3>Large Codebase Comprehension</h3>
+        <p>Mythos can understand and reason over massive codebases — the kind that took human teams
+        months to navigate — identifying deep, non-obvious vulnerability chains that span multiple files and modules.</p>
+        <div class="cap-metric">&gt;50%</div>
+        <div class="cap-metric-label">CVEs solved autonomously vs. needing human guidance</div>
+      </div>
+      <div class="cap-card">
+        <span class="cap-badge">CAPABILITY 06</span>
+        <h3>Saturates All Prior Benchmarks</h3>
+        <p>Anthropic's internal and external security evaluation benchmarks — built over years — are
+        "mostly saturated" by Mythos. The old ruler can no longer measure it, requiring entirely new evaluation frameworks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     CAN / CANNOT
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// Access Reality</span>
+    <h2>What Can and Cannot Be Done With Mythos Preview</h2>
+    <p class="lead">Understanding the hard lines drawn by Anthropic's decision to restrict access.</p>
+
+    <div class="can-grid">
+      <div class="can-box yes">
+        <h3>✅ What Project Glasswing Partners CAN Do</h3>
+        <ul class="can-list">
+          <li><span class="dot"></span>Scan their own codebases for vulnerabilities using Mythos</li>
+          <li><span class="dot"></span>Run defensive red-teaming and penetration testing on their own systems</li>
+          <li><span class="dot"></span>Generate automated patch proposals for discovered vulnerabilities</li>
+          <li><span class="dot"></span>Use Mythos to harden software before deployment</li>
+          <li><span class="dot"></span>Access the model through Amazon Bedrock with enterprise-grade security controls</li>
+          <li><span class="dot"></span>Collaborate and share learnings with other Glasswing partners</li>
+          <li><span class="dot"></span>Use vetted security professionals without standard cyber safeguards (Cyber Verification Program)</li>
+        </ul>
+      </div>
+      <div class="can-box no">
+        <h3>🚫 What NOBODY (Outside Partners) Can Do</h3>
+        <ul class="can-list">
+          <li><span class="dot"></span>Access Claude Mythos Preview through claude.ai or the API — it is not available</li>
+          <li><span class="dot"></span>Self-sign up for Project Glasswing — invitation and vetting required</li>
+          <li><span class="dot"></span>Use Mythos for offensive purposes, even as a Glasswing partner</li>
+          <li><span class="dot"></span>Ask public-facing Claude (Sonnet, Haiku, Opus) to replicate Mythos capabilities — they cannot</li>
+          <li><span class="dot"></span>See details of 99%+ of vulnerabilities found — not disclosed while unpatched</li>
+          <li><span class="dot"></span>Use Mythos to scan third-party or competitor systems</li>
+          <li><span class="dot"></span>Access the model weights or architecture details</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     WHY RESTRICTED
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// The Decision</span>
+    <h2>Why Anthropic Chose Not to Release It</h2>
+    <p class="lead">Three interconnected reasons form the logic behind the most significant product withholding in AI history.</p>
+
+    <div class="reason-steps">
+      <div class="reason-step">
+        <span class="step-num">01</span>
+        <h3>The Dual-Use Problem</h3>
+        <p>The same capability that lets defenders find and fix vulnerabilities lets attackers find and exploit them.
+        Unlike most dual-use AI risks, here the attack surface is every device, OS, and browser on the planet —
+        and the attack cost drops to nearly zero.</p>
+      </div>
+      <div class="reason-step">
+        <span class="step-num">02</span>
+        <h3>The 6–12 Month Window</h3>
+        <p>Anthropic publicly stated: within 6 to 12 months, other AI companies will have Mythos-class models
+        and may release them without safeguards. The goal of Glasswing is to give defenders a head start
+        before that window closes.</p>
+      </div>
+      <div class="reason-step">
+        <span class="step-num">03</span>
+        <h3>99% of Bugs Are Still Unpatched</h3>
+        <p>Of the vulnerabilities found, the vast majority have not yet been fixed. Publishing technical details
+        before patches ship would hand attackers a ready-made exploit list. Responsible disclosure requires silence
+        — for now.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     WHAT COULD HAVE BEEN / ANALYSIS
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// Scenario Analysis</span>
+    <h2>What Could Have Happened — and What This Means</h2>
+    <p class="lead">The decision to restrict Mythos is historically significant. Here's the branching path of outcomes.</p>
+
+    <div class="scenario-grid">
+      <div class="scenario">
+        <div class="s-head">// Scenario A — If It Had Been Released Publicly</div>
+        <h3>The Risk That Was Avoided</h3>
+        <p>Any individual, criminal group, or nation-state would have access to a tool that can autonomously
+        find exploitable vulnerabilities in Windows, macOS, iOS, Android, Chrome, and Firefox for ~$100.
+        Ransomware attacks, government espionage, and infrastructure takedowns would scale dramatically.
+        The patch-vs-exploit race, already unwinnable for defenders, would have collapsed.</p>
+      </div>
+      <div class="scenario">
+        <div class="s-head">// Scenario B — If Glasswing Had Not Existed</div>
+        <h3>The Opportunity That Would Have Been Missed</h3>
+        <p>Anthropic would have had to either sit on the model indefinitely or release it anyway.
+        The 10,000+ vulnerabilities now being patched across critical infrastructure would have remained open.
+        The project forced an industry-wide acknowledgment that AI has crossed an offensive threshold —
+        and created the coordination structure to respond.</p>
+      </div>
+      <div class="scenario">
+        <div class="s-head">// Scenario C — What Happens in 6–12 Months</div>
+        <h3>The Race Anthropic Is Trying to Win</h3>
+        <p>Anthropic expects competitors to build Mythos-class models and release them openly. When that
+        happens, the security gaps Glasswing is patching today will no longer exist — but any that remain
+        open will be immediately exploitable by anyone. The value of the head start is measured in vulnerabilities
+        patched before that moment arrives.</p>
+      </div>
+      <div class="scenario">
+        <div class="s-head">// Scenario D — The Precedent It Sets</div>
+        <h3>AI Industry Behavior May Never Be the Same</h3>
+        <p>For the first time, a major AI lab built its most powerful model and chose not to sell it.
+        Whether this is genuine safety leadership or brilliant marketing (exclusivity makes Mythos the most
+        talked-about model in AI history), it demonstrates that the "ship everything" norm can be broken —
+        and invites regulation and norms to form around the idea that some AI capabilities require restricted access.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     PARTNERS
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// Partners</span>
+    <h2>Who Has Access</h2>
+    <p class="lead">Launch partners and the growing coalition of vetted organizations inside Project Glasswing.</p>
+
+    <div class="partners-wrap">
+      <span class="partner-tag">Amazon Web Services</span>
+      <span class="partner-tag">Apple</span>
+      <span class="partner-tag">Google</span>
+      <span class="partner-tag">Microsoft</span>
+      <span class="partner-tag">Cisco</span>
+      <span class="partner-tag">CrowdStrike</span>
+      <span class="partner-tag">NVIDIA</span>
+      <span class="partner-tag">JPMorganChase</span>
+      <span class="partner-tag">Palo Alto Networks</span>
+      <span class="partner-tag">Broadcom</span>
+      <span class="partner-tag">Linux Foundation</span>
+      <span class="partner-tag">Cloudflare</span>
+      <span class="partner-tag">Cloud Software Group (Citrix/TIBCO)</span>
+      <span class="partner-tag">+ 136 vetted organizations in 15+ countries</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════════════════════
+     WHAT YOU CAN USE
+═══════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <span class="section-tag">// What's Available to You</span>
+    <h2>What You Can Actually Access Today</h2>
+    <p class="lead">Mythos Preview is off-limits, but Anthropic has made security tools available through the normal Claude stack.</p>
+
+    <div class="use-grid">
+      <div class="use-card">
+        <span class="u-tag">Available Now</span>
+        <h3>Claude Security (Public Beta)</h3>
+        <p>An Enterprise product powered by Claude Opus 4.7 that scans your own codebase for vulnerabilities
+        and generates proposed fixes. Has already patched 2,100+ vulnerabilities in its first three weeks.</p>
+      </div>
+      <div class="use-card">
+        <span class="u-tag">Available Now</span>
+        <h3>Claude Opus 4.7 / Sonnet 4.6</h3>
+        <p>The publicly available frontier models you can use through claude.ai and the API. Capable for
+        code review and general security work — but not in the same capability class as Mythos Preview.</p>
+      </div>
+      <div class="use-card">
+        <span class="u-tag">For Professionals</span>
+        <h3>Cyber Verification Program</h3>
+        <p>Vetted security professionals — penetration testers, red teamers — can apply for permission to
+        use Anthropic's models without standard cyber safeguards for legitimate security research.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<div class="footer">
+  <div class="container">
+    <p>Sources: <a href="https://www.anthropic.com/project/glasswing" target="_blank">anthropic.com/project/glasswing</a> ·
+    <a href="https://www.anthropic.com/glasswing" target="_blank">anthropic.com/glasswing</a> ·
+    <a href="https://red.anthropic.com/2026/mythos-preview" target="_blank">red.anthropic.com/2026/mythos-preview</a></p>
+    <p style="margin-top:8px;">Compiled June 2026 · For informational and content creation use</p>
+  </div>
+</div>
+
+</body>
+</html>

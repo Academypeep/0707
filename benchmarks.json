@@ -1,0 +1,139 @@
+{
+  "source": "Anthropic Official Release + Third-Party Evaluations",
+  "date": "June 9, 2026",
+  "models_compared": ["claude-fable-5", "claude-opus-4-8", "gpt-5.5", "gemini-3.1-pro"],
+  "benchmarks": [
+    {
+      "name": "Hex Analytics Benchmark",
+      "category": "Analytics",
+      "description": "Complex, long-running analytical tasks",
+      "evaluator": "Hex (third-party)",
+      "scores": {
+        "claude-fable-5": { "value": 90.0, "unit": "percent", "rank": 1, "note": "First model ever to break 90%" },
+        "claude-opus-4-8": { "value": 80.0, "unit": "percent", "rank": 2 },
+        "gpt-5.5": { "value": null, "note": "Not evaluated" },
+        "gemini-3.1-pro": { "value": null, "note": "Not evaluated" }
+      }
+    },
+    {
+      "name": "SWE-Bench Pro",
+      "category": "Agentic Coding",
+      "description": "Autonomous software engineering on real production codebases",
+      "evaluator": "SWE-Bench (independent)",
+      "scores": {
+        "claude-fable-5": { "value": 80.3, "unit": "percent", "rank": 1 },
+        "claude-opus-4-8": { "value": 69.2, "unit": "percent", "rank": 2 },
+        "gpt-5.5": { "value": 58.6, "unit": "percent", "rank": 3 },
+        "gemini-3.1-pro": { "value": 54.2, "unit": "percent", "rank": 4 }
+      }
+    },
+    {
+      "name": "Hebbia Finance Benchmark",
+      "category": "Finance / Knowledge Work",
+      "description": "Senior analyst-level reasoning over financial documents",
+      "evaluator": "Hebbia (third-party)",
+      "scores": {
+        "claude-fable-5": { "value": 1, "unit": "rank", "rank": 1, "note": "Highest of any tested model" },
+        "claude-opus-4-8": { "value": 2, "unit": "rank", "rank": 2 },
+        "gpt-5.5": { "value": 3, "unit": "rank", "rank": 3 },
+        "gemini-3.1-pro": { "value": 4, "unit": "rank", "rank": 4 }
+      }
+    },
+    {
+      "name": "GDPval-AA",
+      "category": "Knowledge Work",
+      "description": "Professional knowledge work — general reasoning and analysis",
+      "evaluator": "Artificial Analysis (independent)",
+      "scores": {
+        "claude-fable-5": { "value": 1932, "unit": "score", "rank": 1 },
+        "claude-opus-4-8": { "value": 1890, "unit": "score", "rank": 2 },
+        "gpt-5.5": { "value": 1769, "unit": "score", "rank": 3 },
+        "gemini-3.1-pro": { "value": 1314, "unit": "score", "rank": 4 }
+      }
+    },
+    {
+      "name": "GDPpdf Visual Document Reasoning",
+      "category": "Vision / Document AI",
+      "description": "Reasoning over PDFs with embedded charts, tables, and figures",
+      "evaluator": "Artificial Analysis (independent)",
+      "scores": {
+        "claude-fable-5": { "value": 29.8, "unit": "percent", "rank": 1 },
+        "claude-opus-4-8": { "value": 22.5, "unit": "percent", "rank": 3 },
+        "gpt-5.5": { "value": 24.9, "unit": "percent", "rank": 2 },
+        "gemini-3.1-pro": { "value": 16.7, "unit": "percent", "rank": 4 }
+      }
+    },
+    {
+      "name": "Databricks OfficeQA Pro",
+      "category": "Enterprise Document QA",
+      "description": "Hard agentic document QA — file search, web search, code execution, multimodal understanding",
+      "evaluator": "Databricks (internal)",
+      "scores": {
+        "claude-fable-5": { "value": 57.9, "unit": "percent", "rank": 1, "note": "New state of the art" },
+        "note": "Other models not formally evaluated on this benchmark in this comparison"
+      }
+    },
+    {
+      "name": "Terminal-Bench 2.1",
+      "category": "Agentic / Coding",
+      "description": "Terminal-based autonomous task completion",
+      "evaluator": "Terminal-Bench (independent)",
+      "scores": {
+        "claude-fable-5": { "value": 88.0, "unit": "percent", "rank": 1 },
+        "claude-opus-4-8": { "value": 82.7, "unit": "percent", "rank": 2 },
+        "gemini-3.1-pro": { "value": 70.7, "unit": "percent", "rank": 3 }
+      }
+    },
+    {
+      "name": "Spreadsheet Suite",
+      "category": "Analytics / Office Work",
+      "description": "Everyday Excel/spreadsheet tasks at every effort level",
+      "evaluator": "Anthropic (internal)",
+      "scores": {
+        "claude-fable-5": { "value": "25-30% faster", "rank": 1, "note": "Wins at every effort level vs. Opus 4.8" },
+        "claude-opus-4-8": { "value": "Baseline", "rank": 2 }
+      }
+    }
+  ],
+  "pricing": {
+    "claude-fable-5": {
+      "input_per_million_tokens": 10.00,
+      "output_per_million_tokens": 50.00,
+      "prompt_caching_discount": "90% on cached input tokens",
+      "context_window_output": "128K tokens",
+      "api_model_name": "claude-fable-5",
+      "free_on_paid_plans_until": "June 22, 2026"
+    },
+    "claude-opus-4-8": {
+      "input_per_million_tokens": 5.00,
+      "output_per_million_tokens": 25.00,
+      "note": "Approximately half the price of Fable 5"
+    }
+  },
+  "availability": [
+    "Claude API",
+    "claude.ai (Pro, Max, Team, Enterprise)",
+    "Claude Code",
+    "Amazon Bedrock",
+    "Google Cloud",
+    "Microsoft Foundry",
+    "GitHub Copilot",
+    "Snowflake Cortex AI",
+    "Databricks"
+  ],
+  "current_status": {
+    "as_of": "June 13, 2026",
+    "claude_fable_5": "SUSPENDED",
+    "claude_mythos_5": "SUSPENDED",
+    "unaffected_models": ["claude-opus-4-8", "claude-sonnet-4-6", "claude-haiku-4-5"],
+    "reason": "US government export control directive issued June 12, 2026, 5:21pm ET, citing national security authorities. Ordered suspension of Fable 5 and Mythos 5 access for any foreign national. Anthropic could not enforce nationality-based filtering in real time and suspended both models for all users globally.",
+    "restoration_date_announced": false,
+    "availability_window_chart": {
+      "originally_planned_free_access_days": 13,
+      "actual_public_access_days": 3,
+      "launch_date": "2026-06-09",
+      "originally_planned_end_date": "2026-06-22",
+      "suspension_date": "2026-06-12"
+    }
+  }
+}
