@@ -1,0 +1,35 @@
+{
+  "name": "mythos-agent",
+  "version": "1.0.0",
+  "description": "Node.js implementation of the Mythos agent based on Mythos Research Edition - 8-phase vulnerability discovery scaffold",
+  "main": "mythos-agent.js",
+  "scripts": {
+    "start": "node mythos-agent.js",
+    "dev": "node mythos-agent.js --target . --budget 3.00",
+    "test": "jest",
+    "scan": "node mythos-agent.js"
+  },
+  "keywords": [
+    "mythos",
+    "vulnerability",
+    "security",
+    "agent",
+    "research",
+    "static-analysis",
+    "dynamic-analysis"
+  ],
+  "author": "Mythos Agent Implementation",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.1.2",
+    "gulp": "^5.0.1",
+    "jest": "^30.4.2",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.105.0",
+    "axios": "^1.18.0"
+  }
+}
