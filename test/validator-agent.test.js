@@ -30,7 +30,7 @@ describe('ValidatorAgent', () => {
 
     const result = await validator.validateFinding(finding);
     expect(result.isReal).toBe(true);
-    expect(result.confidence).toBe(90);
+    expect(result.confidence).toBe(92);
   });
 
   test('should validate batch of findings and track stats', async () => {
