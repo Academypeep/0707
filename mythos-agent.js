@@ -100,7 +100,8 @@ class MythosAgent {
     this.validator = new ValidatorAgent({
       targetDir: this.options.targetDir,
       model: this.options.model || 'claude-opus-4.5',
-      apiKey: this.options.apiKey || process.env.ANTHROPIC_API_KEY
+      apiKey: this.options.apiKey || process.env.ANTHROPIC_API_KEY,
+      allowMock: this.options.allowMock
     });
     this.reportGenerator = new ReportGenerator({
       outputDir: this.options.reportDir || './reports',
@@ -223,6 +224,7 @@ class MythosAgent {
         targetDir: this.options.targetDir,
         model: this.options.model || 'claude-opus-4.5',
         apiKey: this.options.apiKey || process.env.ANTHROPIC_API_KEY,
+        allowMock: this.options.allowMock,
         useThinkAndVerify: this.options.useThinkAndVerify !== false,
         entryPoint: this.entryPoint,
         staticAnalysis: this.options.staticAnalysis || {}
