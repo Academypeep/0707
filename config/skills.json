@@ -1,0 +1,10 @@
+{
+  "skills": [
+    {
+      "name": "MockHeuristicScanner",
+      "version": "1.0.0",
+      "path": "../lib/mock-heuristic-skill",
+      "enabled": true
+    }
+  ]
+}

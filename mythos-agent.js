@@ -109,6 +109,10 @@ class MythosAgent {
       disclosureMode: this.options.disclosureMode || 'coordinated'
     });
 
+    const { SkillManager } = require('./lib/skill-manager');
+    this.skillManager = new SkillManager();
+    this.skillManager.loadSkills();
+
     this.phases = [
       'languageDetection',
       'sinkGuidedSlicing',
