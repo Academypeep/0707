@@ -1,0 +1,91 @@
+{
+  "project": "From Mythos to Fable — Complete Event Timeline",
+  "compiled_by": "Nandani Raj",
+  "compiled_date": "June 13, 2026",
+  "events": [
+    {
+      "date": "March 26, 2026",
+      "event": "Claude Mythos Leaks",
+      "description": "The existence of a model named Claude Mythos becomes publicly known through leaked blog post drafts before any official announcement.",
+      "significance": "First public signal that Anthropic had built something unusual enough to treat differently."
+    },
+    {
+      "date": "Early 2026 (pre-April)",
+      "event": "Internal Testing Reveals Unexpected Capabilities",
+      "description": "During standard pre-release evaluation, Anthropic discovers Claude Mythos Preview can autonomously find and exploit zero-day vulnerabilities in every major OS and browser. This capability was not the result of cybersecurity-specific training — it emerged from general improvements in code, reasoning, and autonomy.",
+      "significance": "First documented case of general AI capability producing superhuman cybersecurity performance without targeted training."
+    },
+    {
+      "date": "April 7, 2026",
+      "event": "Project Glasswing + Claude Mythos Preview Launch",
+      "description": "Anthropic announces Project Glasswing — a controlled cybersecurity coalition — and gives access to Claude Mythos Preview to 12 founding partners: AWS, Apple, Google, Microsoft, Cisco, CrowdStrike, NVIDIA, JPMorganChase, Palo Alto Networks, Broadcom, Linux Foundation, and Anthropic. 40+ additional vetted organizations also receive access.",
+      "partners_count": 52,
+      "significance": "First time a major AI lab withheld their most capable model from public release due to safety concerns and created a structured alternative access program."
+    },
+    {
+      "date": "April 7-8, 2026",
+      "event": "Technical Details Published on Red Team Blog",
+      "description": "Anthropic's Frontier Red Team publishes technical details of Mythos Preview's security capabilities — including specific vulnerability discoveries (OpenBSD 27-year-old bug, FreeBSD 17-year-old RCE, FFmpeg 16-year-old flaw, browser sandbox escapes) — for the subset of findings where patches had already shipped.",
+      "url": "https://red.anthropic.com/2026/mythos-preview",
+      "significance": "First public evidence of AI performing autonomous exploit development on real production software."
+    },
+    {
+      "date": "April 2026",
+      "event": "Amazon Bedrock Hosts Mythos Preview",
+      "description": "AWS makes Claude Mythos Preview available through Amazon Bedrock in gated research preview as part of Project Glasswing — the first cloud provider to offer the model.",
+      "significance": "Demonstrates enterprise-grade deployment path for restricted frontier models."
+    },
+    {
+      "date": "April - May 2026",
+      "event": "First Results: 10,000+ High-Severity Vulnerabilities Found",
+      "description": "Glasswing partners report finding more than 10,000 high or critical-severity vulnerabilities. 23,019 candidate vulnerabilities scanned across 1,000+ open-source projects. 1,726 confirmed valid (90.8% true positive rate). Cloudflare reports thousands of bugs with false-positive rates better than human testers.",
+      "vulnerabilities_found": 10000,
+      "candidate_vulnerabilities": 23019,
+      "confirmed_vulnerabilities": 1726,
+      "true_positive_rate": 0.908,
+      "significance": "Demonstrated that Mythos-class AI could find more vulnerabilities in weeks than human teams found in years."
+    },
+    {
+      "date": "May 2026",
+      "event": "Claude Security Launches in Public Beta",
+      "description": "Anthropic releases Claude Security — a codebase vulnerability scanner powered by Claude Opus 4.7 — for Enterprise customers as a public beta. In its first three weeks, it patches 2,100+ vulnerabilities.",
+      "patches_in_first_3_weeks": 2100,
+      "significance": "Makes a scaled-down version of Glasswing's capability available to all Enterprise customers."
+    },
+    {
+      "date": "May - June 2026",
+      "event": "Glasswing Expands to 150+ Organizations in 15+ Countries",
+      "description": "Project Glasswing expands to approximately 150 new organizations, each required to meet Anthropic's security requirements before gaining access. Organizations based in more than 15 countries, most providing critical infrastructure to many more.",
+      "total_organizations": 150,
+      "countries": 15,
+      "significance": "Proves the controlled-access model can scale globally."
+    },
+    {
+      "date": "June 4, 2026",
+      "event": "Anthropic Publishes 'When AI Builds Itself'",
+      "description": "Anthropic publishes a paper calling for a globally coordinated slowdown on frontier AI development due to safety concerns — five days before releasing their most powerful public model ever.",
+      "significance": "Highlights the tension between safety advocacy and competitive reality that defines the current moment in AI."
+    },
+    {
+      "date": "June 9, 2026",
+      "event": "Claude Fable 5 + Claude Mythos 5 Launch",
+      "description": "Anthropic releases Claude Fable 5 — the first publicly available Mythos-class model — alongside Claude Mythos 5, an upgraded version of the restricted model for existing Glasswing partners. Fable 5 includes safety classifiers that route dangerous cybersecurity and biology queries to Opus 4.8. Available immediately on Claude API, claude.ai, AWS Bedrock, Google Cloud, Microsoft Foundry, Snowflake, Databricks, and GitHub Copilot.",
+      "pricing_input_per_million": 10.00,
+      "pricing_output_per_million": 50.00,
+      "free_on_paid_plans_until": "June 22, 2026",
+      "key_benchmarks": {
+        "hex_analytics": "90%+ (first model ever)",
+        "swe_bench_pro": "80.3%",
+        "hebbia_finance": "#1 of all tested models",
+        "gdpval_aa": 1932
+      },
+      "significance": "First time Mythos-class AI capability is accessible to any developer, business analyst, data scientist, or individual with an internet connection and a Claude subscription."
+    },
+    {
+      "date": "June 11, 2026",
+      "event": "Cloud Software Group Joins Project Glasswing",
+      "description": "Cloud Software Group (parent of Citrix, TIBCO, Spotfire, Jaspersoft) joins Project Glasswing, gaining access to the upgraded Claude Mythos 5 model for use across their portfolio — including national security, financial services, and healthcare environments.",
+      "significance": "Demonstrates continued expansion of Glasswing into critical enterprise software."
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+LINKEDIN POST OPTIONS — Nandani Raj
+All three use the SUSPENSION as the hook. That is what makes this timely and shareable today.
+===============================================================================================
+
+OPTION A — STORY-FIRST (Best for engagement — use this one)
+------------------------------------------------------------
+
+Claude Fable 5 was the most analytically capable AI ever released to the public.
+
+It was live for 3 days.
+
+Then the US government pulled it.
+
+Here is the story — because most people saw the launch headline and missed everything that came after.
+
+April 2026: Anthropic builds Claude Mythos Preview and refuses to release it publicly. It could find zero-day security vulnerabilities in every major OS and browser — autonomously — for about $100 of compute. Too dangerous to give anyone. Instead, they built Project Glasswing: an invite-only coalition of AWS, Apple, Google, Microsoft, and CrowdStrike. In 6 weeks it found 10,000+ critical security flaws.
+
+June 9, 2026: They release Claude Fable 5 — the same underlying intelligence, made safe with classifiers. It posts 90%+ on the hardest analytical benchmarks ever run. #1 on financial document reasoning. 80.3% on software engineering benchmarks (GPT-5.5 got 58.6%). Analysts could finally run it directly in Snowflake SQL. The most powerful AI anyone could actually use.
+
+June 12, 2026: At 5:21pm ET, the US Commerce Department issues an export control directive. Suspend all access to Fable 5 for any foreign national — inside or outside the US, including Anthropic's own employees. Anthropic cannot filter users by nationality in real time, so they shut it off for everyone.
+
+June 13, 2026 — today: Fable 5 is suspended. No return date given.
+
+This is the first time a US AI company has been ordered to take a deployed public model offline by the federal government.
+
+I built a full research project covering the complete arc — the Mythos story, what Fable 5 could do (with all benchmark data and charts), the suspension/ban details, and what this means for data analytics work right now.
+
+The site includes visual charts showing exactly how Fable 5 compared to other models — and a chart showing just how short its public access window actually was: 3 days, instead of the 13 days originally planned.
+
+Everything is open source. Website, analysis, benchmark JSON, timeline JSON.
+
+Link in comments ↓
+
+The analysts who understand what just happened — and what comes next — are the ones who will be ready when access returns.
+
+#DataAnalytics #AI #Anthropic #ClaudeAI #BusinessAnalytics #AIPolicy
+
+===============================================================================================
+
+OPTION B — NUMBERS-FIRST (Best for analytics/BI professionals)
+---------------------------------------------------------------
+
+A 90% score on the hardest analytical benchmark ever run.
+#1 on finance document reasoning.
+80.3% on software engineering (competitors at 58.6%).
+25–30% faster on spreadsheet tasks.
+Available to anyone with a Claude subscription.
+
+Then gone — 3 days later.
+
+Claude Fable 5 launched June 9, 2026 as the first publicly available Mythos-class AI model from Anthropic.
+On June 12, the US government issued an export control directive ordering Anthropic to suspend access for all foreign nationals.
+Anthropic couldn't filter by nationality — so they shut it off for everyone.
+As of today, June 13: suspended. No return date.
+
+This is the first government-ordered removal of a publicly deployed AI model in US history.
+
+I tracked the entire arc — from Claude Mythos Preview being kept behind an invite-only security coalition in April, through Fable 5's 3-day public window, to today's suspension — and built a full research site with all data.
+
+What's included:
+→ Complete event timeline (JSON, downloadable)
+→ Benchmark comparison table (all sources linked)
+→ Practical data analyst guide for Fable 5 (for when it returns)
+→ Full written analysis of every act in this story
+
+All open source. All linked below.
+
+If you work in data, analytics, or AI-adjacent strategy — you need to understand this arc.
+
+🔗 in comments
+
+#DataAnalytics #AI #BusinessIntelligence #Anthropic #AIPolicy #Analytics
+
+===============================================================================================
+
+OPTION C — CAREER POSITIONING (Best if job searching)
+-----------------------------------------------------
+
+I followed the Anthropic Mythos → Fable 5 story closer than most people.
+
+Not because I work in cybersecurity. Because I work in data analytics — and I recognized immediately what the capability jump meant for the kind of work I do every day.
+
+Here is the full arc in 6 lines:
+
+→ April 2026: Anthropic builds the most capable AI ever. Refuses to release it. Too dangerous.
+→ April–May: Project Glasswing. Invite-only. 10,000+ zero-day flaws found.
+→ June 9: Fable 5 launches. Mythos-class, made public. 90% on analytics benchmarks.
+→ June 12: US government export control directive. Suspend all access for foreign nationals.
+→ June 12 evening: Anthropic shuts it off for everyone to comply.
+→ June 13 — today: Suspended. First government-ordered AI model takedown in US history.
+
+I built a full research project on it. Website, analysis, benchmark data, complete timeline.
+All open source. Built in one session with Claude.
+
+That is the demonstration, not just the topic.
+
+If you hire for data analytics, business intelligence, or AI strategy roles — and you want someone who thinks in systems, tracks what matters, and builds before being asked — let's connect.
+
+🔗 Full project in comments
+
+#DataAnalytics #OpenToWork #AI #BusinessAnalytics #Anthropic #AIStrategy
+
+===============================================================================================
+
+COMMENT (post this separately with the link):
+---------------------------------------------
+🔗 Full project: [YOUR GITHUB PAGES URL]
+
+What's there:
+• The complete website covering the full arc
+• Mythos deep-dive page (the original restricted model)
+• Full written analysis (analysis.md)
+• Practical Fable 5 guide for data analysts (fable5-data-analyst-guide.md)
+• All benchmark data in JSON (benchmarks.json)
+• Complete timeline in JSON (timeline.json)
+
+Open source. Fork it. Use it. Share it.
