@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const pLimit = require('p-limit');
 
 // File ranker — used in Phase 2 (fileRanking) to prioritize
 // internet-facing and authentication code on the 1–5 scale.
@@ -24,6 +25,7 @@ const { ReportGenerator } = require('./lib/report-generator');
 const { CodeBrowser } = require('./lib/code-browser');
 const { SandboxExecutor } = require('./lib/sandbox-executor');
 const { buildScanPlan } = require('./lib/scan-planner');
+const { CostTracker } = require('./lib/cost-tracker');
 
 /**
  * Mythos Agent - Implements the 8-phase vulnerability discovery scaffold
@@ -39,6 +41,7 @@ class MythosAgent {
       minExecSeverity: options.minExecSeverity || 'HIGH',
       execBudget: options.execBudget || 3.00,
       skipExec: options.skipExec || false,
+      resume: options.resume || false, // Checkpoint resume flag
       // Phase 2 (fileRanking) options — forwarded to rankFiles()
       ranker: {
         // Only surface files at or above this rank (1–5) to downstream phases.
@@ -129,10 +132,12 @@ class MythosAgent {
     this.findings = [];
     this.rankedFiles = [];           // populated by runFileRanking()
     this.dismissalMemory = new Set();
-    this.costTracker = {
-      total: 0,
-      byPhase: {}
-    };
+
+    // Utilize custom CostTracker class
+    this.costTracker = new CostTracker();
+
+    // Checkpoint filepath
+    this.checkpointPath = path.join(this.options.targetDir, '.mythos-state.json');
   }
 
   /**
@@ -162,9 +167,8 @@ class MythosAgent {
 
     this.rankedFiles = filtered;
 
-    // Track cost (Phase 2 ≈ $0.15 per scan, per README).
-    this.costTracker.byPhase.fileRanking = 0.15;
-    this.costTracker.total += 0.15;
+    // Track cost (Phase 2 ≈ $0.15 per scan)
+    this.costTracker.trackFlatCost('fileRanking', 0.15);
 
     if (opts.verbose) {
       printRankSummary(ranked);
@@ -210,6 +214,7 @@ class MythosAgent {
   /**
    * NEW: Run VSP-guided hunting on a single file with multi-agent pass@k sampling
    * Uses HunterAgent + CodeBrowser + SandboxExecutor
+   * Optimized with p-limit to control concurrency for pass@k
    *
    * @param {string} filePath - Path to file (relative to targetDir)
    * @param {number} passAtK - Number of independent attempts (default: options.passAtK)
@@ -221,37 +226,85 @@ class MythosAgent {
 
     const allFindings = [];
 
-    for (let attempt = 0; attempt < k; attempt++) {
-      console.log(`  [Attempt ${attempt + 1}/${k}]`);
+    // Use p-limit to control concurrency of independent attempts
+    const limit = pLimit(3); // Allow up to 3 concurrent attempts
 
-      const hunter = new HunterAgent({
-        targetDir: this.options.targetDir,
-        model: this.options.model || 'claude-opus-4.5',
-        apiKey: this.options.apiKey || process.env.ANTHROPIC_API_KEY,
-        allowMock: this.options.allowMock,
-        useThinkAndVerify: this.options.useThinkAndVerify !== false,
-        entryPoint: this.entryPoint,
-        staticAnalysis: this.options.staticAnalysis || {}
+    const tasks = Array.from({ length: k }).map((_, attempt) => {
+      return limit(async () => {
+        console.log(`  [Starting Attempt ${attempt + 1}/${k}]`);
+
+        const hunter = new HunterAgent({
+          targetDir: this.options.targetDir,
+          model: this.options.model || 'claude-opus-4.5',
+          apiKey: this.options.apiKey || process.env.ANTHROPIC_API_KEY,
+          allowMock: this.options.allowMock,
+          useThinkAndVerify: this.options.useThinkAndVerify !== false,
+          entryPoint: this.entryPoint,
+          staticAnalysis: this.options.staticAnalysis || {}
+        });
+
+        try {
+          const language = this._detectLanguage(filePath);
+          const findings = await hunter.hunt(filePath, language);
+
+          // Sync CostTracker actual metrics
+          this.costTracker.total += hunter.costTracker.total;
+
+          return findings;
+        } catch (error) {
+          console.error(`  [Error in attempt ${attempt + 1}]:`, error.message);
+          return [];
+        }
       });
+    });
 
-      try {
-        const language = this._detectLanguage(filePath);
-        const findings = await hunter.hunt(filePath, language);
-        allFindings.push(...findings);
-
-        // Track cost
-        this.costTracker.total += hunter.costTracker.total;
-      } catch (error) {
-        console.error(`  [Error in attempt ${attempt + 1}]:`, error.message);
-      }
+    const results = await Promise.all(tasks);
+    for (const r of results) {
+      allFindings.push(...r);
     }
 
     return allFindings;
   }
 
   /**
+   * Load checkpoint state from disk
+   */
+  _loadCheckpoint() {
+    if (this.options.resume && fs.existsSync(this.checkpointPath)) {
+      try {
+        const state = JSON.parse(fs.readFileSync(this.checkpointPath, 'utf8'));
+        console.log(`[RESUME] Found checkpoint. Resuming from progress with ${state.findings.length} findings.`);
+        this.findings = state.findings || [];
+        this.costTracker.total = state.costTotal || 0;
+        return state.completedFiles || [];
+      } catch (e) {
+        console.warn('⚠️ Failed to load checkpoint. Starting fresh scan.', e.message);
+      }
+    }
+    return [];
+  }
+
+  /**
+   * Save checkpoint state to disk
+   */
+  _saveCheckpoint(completedFiles) {
+    try {
+      const state = {
+        completedFiles,
+        findings: this.findings,
+        costTotal: this.costTracker.total,
+        updatedAt: new Date().toISOString()
+      };
+      fs.writeFileSync(this.checkpointPath, JSON.stringify(state, null, 2), 'utf8');
+    } catch (e) {
+      console.warn('⚠️ Failed to save state checkpoint:', e.message);
+    }
+  }
+
+  /**
    * NEW: Run full multi-file hunt using pass@k sampling
    * Prioritizes high-rank files first
+   * Supports checkpointing (.mythos-state.json and --resume)
    *
    * @returns {Promise<Object>} - Hunt summary with all findings
    */
@@ -259,7 +312,7 @@ class MythosAgent {
     console.log(`\n[MYTHOS] Starting VSP-guided multi-agent hunt`);
     console.log(`[CONFIG] pass@k=${this.options.passAtK}, budget=$${this.options.budget}`);
 
-    const allFindings = [];
+    const completedFiles = this._loadCheckpoint();
     const startFiles = this.entryPoint ? this._resolveTargetFiles(this.entryPoint) : [];
     const rankedPaths = this.rankedFiles.map(f => f.path);
     const prioritizedFiles = this.entryPoint
@@ -272,16 +325,32 @@ class MythosAgent {
     }
 
     for (const filePath of prioritizedFiles) {
+      if (completedFiles.includes(filePath)) {
+        console.log(`[RESUME] Skipping already audited file: ${filePath}`);
+        continue;
+      }
+
       if (this.costTracker.total >= this.options.budget) {
         console.log(`[BUDGET] Reached cost limit ($${this.options.budget})`);
         break;
       }
 
       const findings = await this.huntFile(filePath, this.options.passAtK);
-      allFindings.push(...findings);
+      this.findings.push(...findings);
+
+      // Record progress checkpoint
+      completedFiles.push(filePath);
+      this._saveCheckpoint(completedFiles);
     }
 
-    return { totalFindings: allFindings.length, findings: allFindings };
+    // Clean checkpoint on successful completion
+    if (fs.existsSync(this.checkpointPath)) {
+      try {
+        fs.unlinkSync(this.checkpointPath);
+      } catch (e) {}
+    }
+
+    return { totalFindings: this.findings.length, findings: this.findings };
   }
 
   /**
