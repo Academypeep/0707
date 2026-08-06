@@ -1,0 +1,48 @@
+# Mythos Security Audit PR Check Workflow
+name: Mythos PR Vulnerability Scanner
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  mythos-scan:
+    name: Run Mythos Agent Vulnerability Scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Full git history to detect PR diff files
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Mythos Agent PR Scan
+      run: |
+        # Collect list of changed files in this PR
+        CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.(js|ts|tsx|py|php|c|cpp|h)$' || true)
+
+        if [ -z "$CHANGED_FILES" ]; then
+          echo "No supported source files changed in this PR. Skipping detailed scan."
+          exit 0
+        fi
+
+        echo "Changed files to audit: "
+        echo "$CHANGED_FILES"
+
+        # Initialize the CLI and run scanning over target files with CLI arg parsing
+        # Output is saved as JSON report
+        node index.js --target . --files "$CHANGED_FILES" --min-rank 1 --format json --output ./mythos-pr-report.json
+
+    - name: Publish PR Scan Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: mythos-pr-report
+        path: ./mythos-pr-report.json
