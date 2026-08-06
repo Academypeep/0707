@@ -21,6 +21,9 @@
   "author": "Mythos Agent Implementation",
   "license": "Apache-2.0",
   "type": "commonjs",
+  "bin": {
+    "mythos": "./cli.js"
+  },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^26.1.2",
@@ -31,6 +34,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
     "axios": "^1.18.0",
+    "chalk": "^6.0.0",
+    "commander": "^15.0.0",
     "fastify": "^5.11.2",
     "openai": "^7.4.0",
     "pg": "^8.22.0"
