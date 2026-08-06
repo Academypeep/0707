@@ -22,6 +22,11 @@ function buildFastifyServer(options = {}) {
   const qdrant = new QdrantService();
   const pgService = new VectorPostgresService();
 
+  // Initialize Postgres DB on server startup
+  fastify.addHook('onReady', async () => {
+    await pgService.init();
+  });
+
   // Root status path
   fastify.get('/status', async (request, reply) => {
     return {

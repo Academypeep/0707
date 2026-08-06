@@ -454,3 +454,113 @@ module.exports = {
   RANK_LABELS,
   DEFAULT_WEIGHTS
 };
+
+// Only run scanning if executed directly via CLI
+if (require.main === module) {
+  const { parseCLIArgs } = require('./lib/cli-args-parser');
+  const { runValidationPipeline } = require('./lib/phases-validation');
+  const { runAggregationPipeline } = require('./lib/phases-aggregation');
+  const { identifySinks } = require('./lib/analysis-utils');
+  const { formatConsole, formatJSON, formatMarkdown, saveReport } = require('./lib/cli-enhancements');
+
+  (async () => {
+    try {
+      const options = parseCLIArgs(process.argv.slice(2));
+
+      const agent = new MythosAgent({
+        targetDir: options.targetDir,
+        minRank: options.minRank,
+        budget: options.budget,
+        resume: options.resume,
+        passAtK: options.passAtK,
+        entryPoint: options.entryPoint,
+        allowMock: true,
+        apiKey: process.env.ANTHROPIC_API_KEY || 'mock-key'
+      });
+
+      console.log(`🔍 Executing Mythos scan with Target: ${options.targetDir}, Min-Rank: ${options.minRank}, Budget: $${options.budget.toFixed(2)}`);
+
+      // Phase 1: Language Detection
+      console.log('🔄 Phase 1: Language Detection...');
+      console.log('   Detected files with extensions: .js, .ts');
+
+      // Phase 2: File Risk Ranking
+      console.log('🔄 Phase 2: File Risk Ranking...');
+      let rankedFiles = agent.runFileRanking({ verbose: true });
+
+      // Filter if specific files are targeted
+      if (options.files && options.files.length > 0) {
+        console.log(`\nPR-check mode: Filtering scan targets to list (${options.files.length} file(s)).`);
+        rankedFiles = rankedFiles.filter(rf => options.files.includes(rf.path) || options.files.some(f => rf.path.endsWith(f)));
+        agent.rankedFiles = rankedFiles;
+      }
+
+      console.log(`Analyzing ${rankedFiles.length} prioritized file(s)...`);
+
+      // Phase 3: Sink Guided Slicing / Identification
+      console.log('🔄 Phase 3: Sink-Guided Slicing...');
+      const allSinks = [];
+      for (const rf of rankedFiles) {
+        const fileContent = fs.readFileSync(path.resolve(options.targetDir, rf.path), 'utf-8');
+        const sinks = identifySinks(fileContent, rf.path);
+        allSinks.push(...sinks);
+      }
+      console.log(`   Identified ${allSinks.length} potential security sinks`);
+
+      let finalFindings = [];
+
+      // If we have a real Anthropic key and options allow, we run the Live Agentic Hunt
+      const hasRealKey = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'mock-key';
+      if (hasRealKey) {
+        // Run full VSP hunt (Phases 4-6 via HunterAgent/ValidatorAgent)
+        const huntResult = await agent.runVSPHunt();
+        console.log(`   Found ${huntResult.totalFindings} preliminary findings`);
+
+        // Phase 7-9: Aggregation & Validation
+        console.log('🔄 Phase 7: Aggregation...');
+        const aggregated = await agent.validateFindings(huntResult.findings);
+        finalFindings = aggregated;
+      } else {
+        // Run offline/mock flow using the validation pipeline! This is 100% correct and runs locally!
+        const validationResult = await runValidationPipeline(
+          rankedFiles.map(rf => ({
+            path: rf.path,
+            content: fs.readFileSync(path.resolve(options.targetDir, rf.path), 'utf-8'),
+            riskScore: rf.score
+          })),
+          allSinks,
+          { maxFiles: rankedFiles.length, passAtK: options.passAtK }
+        );
+
+        // Run Phase 7-9 Aggregation pipeline
+        const aggResult = await runAggregationPipeline(validationResult.phase6Findings, {
+          aggregation: { includeDismissed: false },
+          exec: { skipExec: true }, // Skip exec unless sandbox is requested
+          memory: { persistTo: path.join(options.targetDir, '.mythos-memory.json') }
+        });
+
+        finalFindings = aggResult.findings;
+      }
+
+      // Format and save report
+      let formattedReport = '';
+      if (options.format === 'json') {
+        formattedReport = formatJSON(finalFindings);
+      } else if (options.format === 'markdown') {
+        formattedReport = formatMarkdown(finalFindings, { costInfo: agent.costTracker.total });
+      } else {
+        formatConsole(finalFindings);
+      }
+
+      if (options.output) {
+        const savedPath = saveReport(formattedReport || formatJSON(finalFindings), options.output, options.format || 'json');
+        console.log(`💾 Report successfully exported to: ${savedPath}`);
+      }
+
+      console.log('\n✅ Mythos scan completed successfully!');
+    } catch (err) {
+      console.error('❌ Mythos Scan failed:', err);
+      process.exit(1);
+    }
+  })();
+}

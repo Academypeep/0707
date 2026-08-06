@@ -6,7 +6,7 @@
  */
 
 const { program } = require('commander');
-const chalk = require('chalk').default;
+const chalk = require('chalk');
 const path = require('path');
 const { MythosAgent } = require('./mythos-agent');
 const { formatConsole, formatJSON, saveReport } = require('./lib/cli-enhancements');
