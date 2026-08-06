@@ -137,7 +137,9 @@ class MythosAgent {
     this.costTracker = new CostTracker();
 
     // Checkpoint filepath
-    this.checkpointPath = path.join(this.options.targetDir, '.mythos-state.json');
+    const isFile = fs.existsSync(this.options.targetDir) && fs.statSync(this.options.targetDir).isFile();
+    const baseDir = isFile ? path.dirname(this.options.targetDir) : this.options.targetDir;
+    this.checkpointPath = path.join(baseDir, '.mythos-state.json');
   }
 
   /**
@@ -501,7 +503,7 @@ if (require.main === module) {
       console.log('🔄 Phase 3: Sink-Guided Slicing...');
       const allSinks = [];
       for (const rf of rankedFiles) {
-        const fileContent = fs.readFileSync(path.resolve(options.targetDir, rf.path), 'utf-8');
+        const fileContent = fs.readFileSync(rf.path, 'utf-8');
         const sinks = identifySinks(fileContent, rf.path);
         allSinks.push(...sinks);
       }
@@ -525,18 +527,21 @@ if (require.main === module) {
         const validationResult = await runValidationPipeline(
           rankedFiles.map(rf => ({
             path: rf.path,
-            content: fs.readFileSync(path.resolve(options.targetDir, rf.path), 'utf-8'),
+            content: fs.readFileSync(rf.path, 'utf-8'),
             riskScore: rf.score
           })),
           allSinks,
           { maxFiles: rankedFiles.length, passAtK: options.passAtK }
         );
 
+        const isFile = fs.existsSync(options.targetDir) && fs.statSync(options.targetDir).isFile();
+        const baseDir = isFile ? path.dirname(options.targetDir) : options.targetDir;
+
         // Run Phase 7-9 Aggregation pipeline
         const aggResult = await runAggregationPipeline(validationResult.phase6Findings, {
           aggregation: { includeDismissed: false },
           exec: { skipExec: true }, // Skip exec unless sandbox is requested
-          memory: { persistTo: path.join(options.targetDir, '.mythos-memory.json') }
+          memory: { persistTo: path.join(baseDir, '.mythos-memory.json') }
         });
 
         finalFindings = aggResult.findings;
