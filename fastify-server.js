@@ -27,6 +27,11 @@ function buildFastifyServer(options = {}) {
     await pgService.init();
   });
 
+  // Close database connections on server shutdown to avoid open handles
+  fastify.addHook('onClose', async () => {
+    await pgService.close();
+  });
+
   // Root status path
   fastify.get('/status', async (request, reply) => {
     return {
