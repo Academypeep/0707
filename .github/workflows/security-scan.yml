@@ -1,0 +1,39 @@
+# Mythos Continuous Security Scan Workflow
+name: Mythos Security Scan
+
+on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 * * *' # Daily scan
+
+jobs:
+  security-scan:
+    name: Mythos Scan and Audit
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Link Mythos Agent Globally
+      run: npm link
+
+    - name: Execute Global Mythos Security Scan
+      run: |
+        # Call globally linked 'mythos' CLI from anywhere in the terminal
+        mythos scan --target . --min-rank 4 --format json --output ./reports/nightly-security-report.json
+
+    - name: Archive Security Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: nightly-security-report
+        path: ./reports/nightly-security-report.json
