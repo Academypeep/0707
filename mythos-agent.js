@@ -23,7 +23,6 @@ const { ValidatorAgent } = require('./lib/validator-agent');
 const { ReportGenerator } = require('./lib/report-generator');
 const { CodeBrowser } = require('./lib/code-browser');
 const { SandboxExecutor } = require('./lib/sandbox-executor');
-const { buildScanPlan } = require('./lib/scan-planner');
 
 // Autonomous agent & T3MP3ST enhancement modules
 const { EgressScopeContainment } = require('./lib/egress-scope');
