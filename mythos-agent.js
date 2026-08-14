@@ -25,6 +25,14 @@ const { CodeBrowser } = require('./lib/code-browser');
 const { SandboxExecutor } = require('./lib/sandbox-executor');
 const { buildScanPlan } = require('./lib/scan-planner');
 
+// Autonomous agent & T3MP3ST enhancement modules
+const { EgressScopeContainment } = require('./lib/egress-scope');
+const { LLMProvider } = require('./lib/llm-provider');
+const { Arsenal } = require('./lib/arsenal');
+const { MCPServer } = require('./lib/mcp-server');
+const { SwarmCoordinator } = require('./lib/swarm-coordinator');
+const { IntegrityLedger } = require('./lib/integrity-ledger');
+
 /**
  * Mythos Agent - Implements the 8-phase vulnerability discovery scaffold
  * Based on Anthropic's Mythos Preview / Project Glasswing
@@ -107,6 +115,19 @@ class MythosAgent {
       outputDir: this.options.reportDir || './reports',
       projectName: this.options.projectName || path.basename(this.options.targetDir),
       disclosureMode: this.options.disclosureMode || 'coordinated'
+    });
+
+    // Autonomous Agent & Swarm Components
+    this.integrityLedger = new IntegrityLedger(this.options);
+    this.swarmCoordinator = new SwarmCoordinator({
+      targetDir: this.options.targetDir,
+      target: this.options.target || this.options.targetDir,
+      budget: this.options.budget,
+      passAtK: this.options.passAtK,
+      provider: this.options.provider,
+      model: this.options.model,
+      apiKey: this.options.apiKey,
+      allowMock: this.options.allowMock
     });
 
     this.phases = [
@@ -320,6 +341,28 @@ class MythosAgent {
   }
 
   /**
+   * NEW: Run autonomous multi-operator mission
+   */
+  async runAutonomousMission(targetSpec = null, options = {}) {
+    const coordinator = options.swarmCoordinator || this.swarmCoordinator;
+    return await coordinator.executeMission(targetSpec || this.options.targetDir);
+  }
+
+  /**
+   * Alias for runAutonomousMission
+   */
+  async runSwarmMission(targetSpec = null, options = {}) {
+    return await this.runAutonomousMission(targetSpec, options);
+  }
+
+  /**
+   * NEW: Verify claims against evidence via Integrity Ledger
+   */
+  verifyClaims(evidence = {}) {
+    return this.integrityLedger.verifyClaims(evidence);
+  }
+
+  /**
    * Detect programming language from file extension
    */
  _resolveTargetFiles(point) {
@@ -370,6 +413,12 @@ class MythosAgent {
 
 module.exports = {
   MythosAgent,
+  EgressScopeContainment,
+  LLMProvider,
+  Arsenal,
+  MCPServer,
+  SwarmCoordinator,
+  IntegrityLedger,
   // Re-export file-ranker pieces so consumers can import everything
   // from the top-level entry point.
   rankFiles,
