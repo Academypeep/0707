@@ -7,7 +7,9 @@
     "start": "node mythos-agent.js",
     "dev": "node mythos-agent.js --target . --budget 3.00",
     "test": "jest",
-    "scan": "node mythos-agent.js"
+    "scan": "node mythos-agent.js",
+    "autonomous": "node index.js --autonomous --allowMock",
+    "verify-claims": "node index.js --verify-claims"
   },
   "keywords": [
     "mythos",
