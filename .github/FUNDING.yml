@@ -1,0 +1,14 @@
+# Sponsorship Platforms Configuration
+
+# GitHub Sponsors usernames
+github: [Academypeep]
+
+# Open Collective project or organisation slug
+open_collective: mythos-agent
+
+# Ko-fi user
+ko_fi: academypeep
+
+# Custom sponsorship links
+custom:
+  - "https://buymeacoffee.com/academypeep"

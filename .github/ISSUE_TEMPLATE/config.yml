@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability Report
+    url: https://github.com/Academypeep/0707/security/advisories/new
+    about: Please report security vulnerabilities privately through GitHub Security Advisories.
+  - name: Community Discussions & Support
+    url: https://github.com/Academypeep/0707/discussions
+    about: Ask questions, share ideas, and connect with other contributors.
